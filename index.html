@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>agile - a free css template</title>
+<title>PNUD</title>
 <link rel="stylesheet" href="styles.css" type="text/css" />
 <!--[if lt IE 9]>
 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -15,7 +15,16 @@ Download: http://zypopwebtemplates.com/
 License: Creative Commons Attribution
 //-->
 <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
-<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script>
+	$(document).ready(function(e) {
+		
+	  $(".directory").click(function(event) {
+		event.stopPropagation();
+		$(this).children('ul:first').toggle();
+	  });
+	});
+</script>
 </head>
 
 <body>
@@ -109,14 +118,4 @@ License: Creative Commons Attribution
 	
 
 </body>
-<script>
-$(document).ready(function(e) {
-	
-  $(".directory").click(function(event) {
-    event.stopPropagation();
-    $(this).children('ul:first').toggle();
-  });
-});
-
-</script
 </html>
