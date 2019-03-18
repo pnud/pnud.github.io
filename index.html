@@ -15,6 +15,212 @@
 	<link rel="stylesheet" href="http://ods.inei.gob.pe/ods/assets/dt/main.css">
 	<!-- <script type="text/javascript" src="js/boostrap.js"></script> -->
 	<meta charset="UTF-8">
+	
+	<script type="text/javascript" src="http://ods.inei.gob.pe/ods/assets/Limitless/adm/default/assets/js/core/libraries/jquery.min.js"></script>
+<link rel="stylesheet" href="http://ods.inei.gob.pe/ods/assets/css/main.css">
+<script src="http://ods.inei.gob.pe/ods/assets/dt/main.js"></script>
+<script type="text/javascript" src="http://ods.inei.gob.pe/ods/assets/Limitless/adm/default/assets/js/core/libraries/bootstrap.min.js"></script>
+<script>
+
+	function verObjetivoComunPP(id){
+		$.ajax({
+			url:BASE_URL + 'MainController/jsonIndicadorODScomunPP/' + id,
+			success:function(data){
+				$('#myModal').modal({
+					backdrop: 'static', 
+					keyboard: false
+				}); 
+				$('#titulo_modal').html(`<h4>PROGRAMAS PRESUPUESTALES EN COMÚN</h4>`);
+				$('#tb_indicador_pp_ods').html("");
+				$('#modal_body').html(`
+					<table class="table table-striped" id="tb_indicador_pp_ods">
+						<thead>
+							<tr>
+								<th>CODIGO PROGRAMA</th>
+								<th>DESCRIPCION</th>
+								<th>CANTIDAD DE INDICADORES</th>
+								<th>ENLACE</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+					`);
+				for(var i in data){
+					datos = data[i];
+					console.log(datos);
+					if(datos['COD_PROGRAMA_PRESUPUESTAL'] < 10 ){
+						var cod = '000' + datos['COD_PROGRAMA_PRESUPUESTAL'];
+					}else if(datos['COD_PROGRAMA_PRESUPUESTAL'] < 100){
+						var cod = '00' + datos['COD_PROGRAMA_PRESUPUESTAL'];
+					}else if(datos['COD_PROGRAMA_PRESUPUESTAL'] < 1000){
+						var cod = '0' + datos['COD_PROGRAMA_PRESUPUESTAL'];
+					}else{
+						var cod = datos['COD_PROGRAMA_PRESUPUESTAL'];
+					}
+					$('#tb_indicador_pp_ods tbody').append(`
+							<tr>
+								<td class="align_td">${cod}</td>
+								<td>${datos['DESC_PROGRAMA_PRESUPUESTAL']}</td>
+								<td class="align_td">${datos.CANT}</td>
+								<td class="align_td"><a href="${BASE_URL}MainController/DimProgramaPresupuestal/${datos['COD_PROGRAMA_PRESUPUESTAL']}">Ingresar Aqui</a></td>
+							</tr>
+						`);
+				}
+
+				$('.align_td').css('text-align','center');
+			}
+		});
+	}
+
+	function cambiarColorVariable(){
+		$.ajax({
+			url: BASE_URL + 'MainController/jsonVariable',
+			success:function(data){
+				//console.log(data);
+				$('.img_ods').hover(
+					function(){
+						id = this.id;
+						//console.log(id);
+						for(var i in data){
+							datos = data[i];
+							//console.log(datos);
+							if(id == datos.ID_OBJETIVO){
+								var color = '0px 0px 7px 6px ' + datos.COLOR;
+								//console.log(color);
+								$(this).css("box-shadow", color);
+							}
+						}
+					},function(){
+						$(this).css("box-shadow", "0px 0px 7px 6px #FFFFFF");
+					}
+				);
+			}
+		});
+	}
+
+
+	$(document).ready(function() {
+   		$('#prueba_sel').on('change',function(){
+				id=this.value;
+				//alert(id);
+				if(id==1){
+					$('#div_objetivos_ods').css('display','block');
+					$('#div_objetivos_ppr').css('display','none');
+					$('#div_objetivos_comun').css('display','none');
+				}else if(id == 3){
+					//alert("Procesando Informacion");
+					$('#div_objetivos_comun').css('display','block');
+					$('#div_objetivos_ods').css('display','none');
+					$('#div_objetivos_ppr').css('display','none');
+				}else if(id == 2){
+					$('#div_objetivos_ods').css('display','none');
+					$('#div_objetivos_ppr').css('display','block');
+					$('#div_objetivos_comun').css('display','none');
+					// alert("Procesando Informacion");
+				}
+		});
+
+
+		$('#table_ppr').DataTable({
+			"info": false,
+			"searching": true,
+			"lengthChange": false,
+			"responsive": true
+			//"showNEntries" : false
+			//"paging": false
+		});
+
+		$('#table_responsables').DataTable({
+			"info": false,
+			"searching": false,
+			"lengthChange": false,
+			"responsive": true,
+			"pageLength": 3
+			//"showNEntries" : false
+			//"paging": false
+		});
+
+		$('#table_indicador_comun').DataTable({
+			"info": false,
+			"searching": true,
+			"lengthChange": false,
+			"responsive": true,
+			"pageLength": 10
+			//"showNEntries" : false
+			//"paging": false
+		});
+
+
+	});
+</script>
+<style>
+
+.td_center{
+	text-align: center;
+}
+
+@media (min-width: 200px){
+	.dataTables_wrapper{
+		font-size: 25px;
+	}
+	
+	.table_ods{
+		border: 1px solid;
+	}
+
+	#tb_resumen th,td{
+		font-size: 24px;
+	}
+	
+	#tb_resumen td,th{
+		font-size: 24px;
+	}
+
+	.titulo_ods{
+		font-size: 25px;
+    	color: #2c6190;
+	}
+}
+
+@media (min-width: 1000px){
+	.dataTables_wrapper{
+		font-size: 15px;
+	}
+	
+	.table_ods{
+		/*border: none;*/
+	}
+
+	#tb_resumen{
+		border: none;
+	}
+
+	#tb_resumen th,td{
+		font-size: 13px;
+		border: none;
+	}
+
+	#tb_resumen td,th{
+		font-size: 13px;
+		border: none;
+	}
+
+	.titulo_ods{
+		font-size: 25px;
+    	color: #2c6190;
+	}
+}
+</style>
+<script> cambiarColorVariable(); </script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106330529-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-106330529-1');
+</script>
 </head>
 <body>
 <script>
@@ -663,211 +869,7 @@
     </div>
 
   </div>
-</div><script type="text/javascript" src="http://ods.inei.gob.pe/ods/assets/Limitless/adm/default/assets/js/core/libraries/jquery.min.js"></script>
-<link rel="stylesheet" href="http://ods.inei.gob.pe/ods/assets/css/main.css">
-<script src="http://ods.inei.gob.pe/ods/assets/dt/main.js"></script>
-<script type="text/javascript" src="http://ods.inei.gob.pe/ods/assets/Limitless/adm/default/assets/js/core/libraries/bootstrap.min.js"></script>
-<script>
-
-	function verObjetivoComunPP(id){
-		$.ajax({
-			url:BASE_URL + 'MainController/jsonIndicadorODScomunPP/' + id,
-			success:function(data){
-				$('#myModal').modal({
-					backdrop: 'static', 
-					keyboard: false
-				}); 
-				$('#titulo_modal').html(`<h4>PROGRAMAS PRESUPUESTALES EN COMÚN</h4>`);
-				$('#tb_indicador_pp_ods').html("");
-				$('#modal_body').html(`
-					<table class="table table-striped" id="tb_indicador_pp_ods">
-						<thead>
-							<tr>
-								<th>CODIGO PROGRAMA</th>
-								<th>DESCRIPCION</th>
-								<th>CANTIDAD DE INDICADORES</th>
-								<th>ENLACE</th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</table>
-					`);
-				for(var i in data){
-					datos = data[i];
-					console.log(datos);
-					if(datos['COD_PROGRAMA_PRESUPUESTAL'] < 10 ){
-						var cod = '000' + datos['COD_PROGRAMA_PRESUPUESTAL'];
-					}else if(datos['COD_PROGRAMA_PRESUPUESTAL'] < 100){
-						var cod = '00' + datos['COD_PROGRAMA_PRESUPUESTAL'];
-					}else if(datos['COD_PROGRAMA_PRESUPUESTAL'] < 1000){
-						var cod = '0' + datos['COD_PROGRAMA_PRESUPUESTAL'];
-					}else{
-						var cod = datos['COD_PROGRAMA_PRESUPUESTAL'];
-					}
-					$('#tb_indicador_pp_ods tbody').append(`
-							<tr>
-								<td class="align_td">${cod}</td>
-								<td>${datos['DESC_PROGRAMA_PRESUPUESTAL']}</td>
-								<td class="align_td">${datos.CANT}</td>
-								<td class="align_td"><a href="${BASE_URL}MainController/DimProgramaPresupuestal/${datos['COD_PROGRAMA_PRESUPUESTAL']}">Ingresar Aqui</a></td>
-							</tr>
-						`);
-				}
-
-				$('.align_td').css('text-align','center');
-			}
-		});
-	}
-
-	function cambiarColorVariable(){
-		$.ajax({
-			url: BASE_URL + 'MainController/jsonVariable',
-			success:function(data){
-				//console.log(data);
-				$('.img_ods').hover(
-					function(){
-						id = this.id;
-						//console.log(id);
-						for(var i in data){
-							datos = data[i];
-							//console.log(datos);
-							if(id == datos.ID_OBJETIVO){
-								var color = '0px 0px 7px 6px ' + datos.COLOR;
-								//console.log(color);
-								$(this).css("box-shadow", color);
-							}
-						}
-					},function(){
-						$(this).css("box-shadow", "0px 0px 7px 6px #FFFFFF");
-					}
-				);
-			}
-		});
-	}
-
-
-	$(document).ready(function() {
-   		$('#prueba_sel').on('change',function(){
-				id=this.value;
-				//alert(id);
-				if(id==1){
-					$('#div_objetivos_ods').css('display','block');
-					$('#div_objetivos_ppr').css('display','none');
-					$('#div_objetivos_comun').css('display','none');
-				}else if(id == 3){
-					//alert("Procesando Informacion");
-					$('#div_objetivos_comun').css('display','block');
-					$('#div_objetivos_ods').css('display','none');
-					$('#div_objetivos_ppr').css('display','none');
-				}else if(id == 2){
-					$('#div_objetivos_ods').css('display','none');
-					$('#div_objetivos_ppr').css('display','block');
-					$('#div_objetivos_comun').css('display','none');
-					// alert("Procesando Informacion");
-				}
-		});
-
-
-		$('#table_ppr').DataTable({
-			"info": false,
-			"searching": true,
-			"lengthChange": false,
-			"responsive": true
-			//"showNEntries" : false
-			//"paging": false
-		});
-
-		$('#table_responsables').DataTable({
-			"info": false,
-			"searching": false,
-			"lengthChange": false,
-			"responsive": true,
-			"pageLength": 3
-			//"showNEntries" : false
-			//"paging": false
-		});
-
-		$('#table_indicador_comun').DataTable({
-			"info": false,
-			"searching": true,
-			"lengthChange": false,
-			"responsive": true,
-			"pageLength": 10
-			//"showNEntries" : false
-			//"paging": false
-		});
-
-
-	});
-</script>
-<style>
-
-.td_center{
-	text-align: center;
-}
-
-@media (min-width: 200px){
-	.dataTables_wrapper{
-		font-size: 25px;
-	}
-	
-	.table_ods{
-		border: 1px solid;
-	}
-
-	#tb_resumen th,td{
-		font-size: 24px;
-	}
-	
-	#tb_resumen td,th{
-		font-size: 24px;
-	}
-
-	.titulo_ods{
-		font-size: 25px;
-    	color: #2c6190;
-	}
-}
-
-@media (min-width: 1000px){
-	.dataTables_wrapper{
-		font-size: 15px;
-	}
-	
-	.table_ods{
-		/*border: none;*/
-	}
-
-	#tb_resumen{
-		border: none;
-	}
-
-	#tb_resumen th,td{
-		font-size: 13px;
-		border: none;
-	}
-
-	#tb_resumen td,th{
-		font-size: 13px;
-		border: none;
-	}
-
-	.titulo_ods{
-		font-size: 25px;
-    	color: #2c6190;
-	}
-}
-</style>
-<script> cambiarColorVariable(); </script>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-106330529-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-106330529-1');
-</script>
+</div>
 
 </body>
 </html>
