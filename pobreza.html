@@ -19,16 +19,7 @@ License: Creative Commons Attribution
 <script src="https://public.tableau.com/javascripts/api/tableau-version.min.js"></script>
 <meta charset="UTF-8">
 
-<script>
-$(document).ready(function(e) {
-	
-  $(".directory").click(function(event) {
-    event.stopPropagation();
-    $(this).children('ul:first').toggle();
-  });
-});
 
-</script>
 </head>
 
 <body>
@@ -105,5 +96,14 @@ La pobreza va más allá de la falta de ingresos y recursos para garantizar unos
 	
 
 </body>
+<script>
+$(document).ready(function(e) {
+	
+  $(".directory").click(function(event) {
+    event.stopPropagation();
+    $(this).children('ul:first').toggle();
+  });
+});
 
+</script>
 </html>
