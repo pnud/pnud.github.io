@@ -75,6 +75,11 @@ a.button-reversed {
 
 a.submenu { 
     font-size: 0.7em;
+	display:none;
+}
+
+ul.ul_submenu{
+  display:none;
 }
 
 fieldset {
@@ -337,7 +342,6 @@ footer p a:hover { color:#333; border-bottom-color: #333; }
 .clear {
 	display: block;
 }
-
 
 
 
