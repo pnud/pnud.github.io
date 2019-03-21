@@ -82,6 +82,10 @@ ul.ul_submenu{
   display:none;
 }
 
+il.seleccionado{
+	background-color: #ff0000;
+}
+
 fieldset {
 	display:block;
 	border:none;
